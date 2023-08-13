@@ -1,4 +1,4 @@
-# Repositorio base de l App CRUD ToDo
+# Repositorio base de la App CRUD ToDo
 
 ¡Hola!
 
