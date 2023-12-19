@@ -1,0 +1,8 @@
+.no-search-results{
+    text-align: center;
+    font-size: 18px;
+}
+.no-search-results span{
+    color: orangered;
+    font-weight: 600;
+}

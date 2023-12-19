@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 //Esto es un Custom Hook que nos permite crear nuestros propios estados y demás cosas
 function useLocalStorage(itemName, initialValue) {
   //Estado para la carga y error
+  const [sincronizedItem, setSincronizedItem] = useState(true);
   const [item, setItem] = useState(initialValue);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -24,22 +25,40 @@ function useLocalStorage(itemName, initialValue) {
           setItem(parsedItem);
         }
 
+        setItem(parsedItem);
         setLoading(false);
+        setSincronizedItem(true);
       } catch (error) {
         setLoading(false);
         setError(true);
       }
-    }, 2000);
-  }, []);
+    }, 3000);
+  }, [sincronizedItem]);
 
   //Función para guardar el nuevo estado de los Todos, para ello llamados el setTodos y guardamos en localStorage las funciones de completar y borrar cambiaremos el nombre de la función a saveTodos que hace ambos procesos
   const saveItem = (newItem) => {
-    localStorage.setItem("TODOS_V1", JSON.stringify(newItem));
-    setItem(newItem);
+    try {
+      const stringifiedItem = JSON.stringify(newItem);
+      localStorage.setItem(itemName, stringifiedItem);
+      setItem(newItem);
+    } catch(error) {
+      setError(error);
+    }
+  };
+
+  const sincronizeItem = () => {
+    setLoading(true);
+    setSincronizedItem(false);
   };
 
   //Es necesario retornar de los custom hooks lo que vayamos a necesitar
-  return { item, saveItem, loading, error };
+  return { 
+    item, 
+    saveItem, 
+    loading, 
+    error,
+    sincronizeItem,
+  };
 }
 
 export { useLocalStorage };

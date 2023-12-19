@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 
-const TodoContext = React.createContext();
-
-function TodoProvider({ children }) {
+function useTodos() {
   //Estado donde vamos a definir los ToDos iniciales
   const {
     item: todos,
     saveItem: saveTodos,
+    sincronizeItem: sincronizeTodos,
     loading,
     error,
   } = useLocalStorage("TODOS_V1", []);
@@ -18,26 +17,6 @@ function TodoProvider({ children }) {
   //Obtenemos los Todos completados y el total general
   const completedTodos = todos.filter((todo) => !!todo.completed).length;
   const totalTodos = todos.length;
-
-  //PRUEBA CON useEffect
-  // console.log('Log 1');
-
-  // -- Se ejecutara de ultimas
-  // useEffect(() => {
-  //   console.log('Log 2');
-  // })
-
-  // -- Se ejecutara una unica vez asi se renderice de nuevo la aplicación
-  // useEffect(() => {
-  //   console.log('Log 2');
-  // }, [])
-
-  // -- Se ejecutara unicamente cada vez que haya un cambio en el parametro que le pasemos en el array
-  // useEffect(() => {
-  //   console.log('Log 2');
-  // }, [totalTodos])
-
-  // console.log('Log 3');
 
   //Obtendremos los Todos que coinicidan con el caracter que hayamos colocado en el input y lo vamos a llamar en el component TodoList
   const searchedTodos = todos.filter((todo) => {
@@ -73,26 +52,23 @@ function TodoProvider({ children }) {
   };
 
   return (
-    <TodoContext.Provider value={
-        {
-            loading,
-            error,
-            completedTodos,
-            totalTodos,
-            searchValue,
-            setSearchValue,
-            searchedTodos,
-            completeTodo,
-            deleteTodo,
-            openModal,
-            setOpenModal,
-            addTodo,
-        }
-    }>
-        {children}
-    </TodoContext.Provider>
+    {
+      loading,
+      error,
+      completedTodos,
+      totalTodos,
+      searchValue,
+      setSearchValue,
+      searchedTodos,
+      completeTodo,
+      deleteTodo,
+      openModal,
+      setOpenModal,
+      addTodo,
+      sincronizeTodos
+    }
   );
 }
 
 
-export { TodoContext, TodoProvider };
+export { useTodos };
